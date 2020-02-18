@@ -20,7 +20,7 @@ docker run -it -e AWSACCESSKEYID=obscured -e AWSSECRETACCESSKEY=obscured --privi
 While after we mount the system, the process will be running in the first terminal. And it is the time to start another terminal to access the mount file. The formal command to accomplish the task above is below:
 
 ```sh
-docker exec -it [container-id] bash
+docker exec -it  -e AWSACCESSKEYID=obscured -e AWSSECRETACCESSKEY=obscured --privileged [container-id] bash
 ```
 
 # TODO
