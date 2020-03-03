@@ -1,6 +1,8 @@
 #include <opendht.h>
 #include <vector>
 #include <thread>
+#include <iostream>
+#include <typeinfo>
 
 int main() {
 	dht::DhtRunner node;
@@ -12,8 +14,12 @@ int main() {
 
     node.get(dht::InfoHash::get("123"), [](const std::vector<std::shared_ptr<dht::Value>>& values) {
         // Callback called when values are found
-        for (const auto& value : values)
+        for (const auto& value : values) {
             std::cout << "Found value: " << *value << std::endl;
+			std::cout << (*value).data.data() << std::endl;
+			auto variable = (*value).data.data();
+			std::cout << (char*)(variable) << std::endl;
+		}
         return true; // return false to stop the search
     }, 
     [&finished](bool success) {
@@ -23,5 +29,7 @@ int main() {
 
 	while (!finished);
 	node.join();
+
+	std::cout << std::hex << 123 << std::dec << ' ' << std::endl;
 	return 0;
 }
