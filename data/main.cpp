@@ -29,14 +29,18 @@ int main() {
 	bool finished = false;
 	node.get(
 		key, 
-		[](const std::vector<std::shared_ptr<dht::Value>>& values) {
+		[&finished](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			for (const auto& value : values)
            		std::cout << "Found value: " << *value << std::endl;
 
+			if (values.size() == 3) {
+				finished = true;
+				return false;
+			}
+
 			return true; // else, keep searching
 		},
-		[&finished](bool success) {
-			finished = true;
+		[](bool success) {
 			std::cout << "Get finished with " << (success ? "success" : "failure") << std::endl;
 		}
 	);
