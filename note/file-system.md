@@ -80,11 +80,21 @@ flag `-s` means single thread; flag `-d` means in debug mode; `-f` means direct 
 
 And we can unmount the file system by running `umount testdir`. Notice that even if we kill the process, the command is still necessary to be executed. 
 
-# Design Documentation
+# P2P File System Design Documentation
 
 ## User Namespace 
 
 In order to create different namespace for the system user, and to properly regulate the files, I decide to append the prefix string to every file name in FUSE and OpenDHT. The prefix could be set by the predefined command like `nbfs login "username"`, which stores the string in the OpenDHT or the local file. 
+
+# C/CPP fundamental knowledge
+
+1.  In C, the type of the hard coded string or the return value of `std::string.c_str()` is `const char *`, which is different from `char *`. 
+
+    My first version of the loging function is `log_msg(char * format, ...)`, which should be modified to `log_msg(const char *format, ...)`. 
+
+    [reference](https://stackoverflow.com/questions/20944784/why-is-conversion-from-string-constant-to-char-valid-in-c-but-invalid-in-c)
+
+2.  
 
 # ~~Embedding Python in C Program~~
 
