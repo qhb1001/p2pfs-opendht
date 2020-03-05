@@ -15,7 +15,7 @@ void open_log() {
   //logfile = stderr; 
 }
 
-void log_msg(char *format, ...) {
+void log_msg(const char *format, ...) {
   va_list ap;
   va_start(ap, format);
   vfprintf(logfile, format, ap);
@@ -27,14 +27,14 @@ void log_msg(char *format, ...) {
 bool file_exists(std::string fileName, off_t& filesize) {
 	filesize = 0;
 	// get the file name with prefix
-	std::string fileNameWithPrefix = user_name + "::" + fileName;
+	std::string fileNameWithPrefix = nbfs::user_name + fileName;
 
 	// search for the file
 	bool finished = false;
 	bool find = false;
-	node.get(
-		filenameWithPrefix,
-		[](const std::vector<std::shared_ptr<dht::Value>>& values) {
+	nbfs::node.get(
+		fileNameWithPrefix,
+		[&filesize](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			// compute the size of the file
 			for (const auto& value : values) {
 				std::cout << "Found value: " << *value << std::endl;

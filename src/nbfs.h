@@ -15,14 +15,16 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-// hard coded user name, used for the namespace for files
 namespace nbfs {
+	// hard coded user name, used for the namespace for files
 	static std::string user_name = "hongbo/";
+
+	// connection entry
+	static dht::DhtRunner node;
 }
 
-// connection entry
-dht::DhtRunner node;
 
+extern "C" {
 /* FUSE operations (operations.cpp) */
 int nbfs_getattr(const char *path, struct stat *stbuf);
 int nbfs_open(const char *path, struct fuse_file_info *fi);
@@ -42,6 +44,7 @@ int nbfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
 bool file_exists(std::string fileName, off_t& filesize);
 std::string strip_leading_slash(std::string filename);
 void open_log();
-void log_msg(char *format, ...);
+void log_msg(const char *format, ...);
 
+}
 #endif

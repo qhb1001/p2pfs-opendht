@@ -1,0 +1,29 @@
+(gdb) n
+nbfs_readdir (path=0x7fffe4000b10 "/", buf=0x7fffd8000990, filler=0x7ffff789ece0, offset=0, fi=0x7fffef1c7500) at src/operations.cpp:62
+62		nbfs::node.get(
+(gdb) s
+dht::Where::Where (this=0x7fffef1c73c0) at /usr/include/opendht/value.h:762
+762	    Where() { }
+(gdb) s
+std::vector<dht::FieldValue, std::allocator<dht::FieldValue> >::vector (this=0x7fffef1c73c0) at /usr/include/c++/5/bits/stl_vector.h:257
+257	      : _Base() { }
+(gdb) n
+nbfs_readdir (path=0x7fffe4000b10 "/", buf=0x7fffd8000990, filler=0x7ffff789ece0, offset=0, fi=0x7fffef1c7500) at src/operations.cpp:80
+80		);
+(gdb) n
+62		nbfs::node.get(
+(gdb) s
+std::function<bool (std::vector<std::shared_ptr<dht::Value>, std::allocator<std::shared_ptr<dht::Value> > > const&)>::~function() (this=0x7fffef1c73e0, 
+    __in_chrg=<optimized out>) at /usr/include/c++/5/functional:1974
+1974	    class function<_Res(_ArgTypes...)>
+(gdb) n
+nbfs_readdir (path=0x7fffe4000b10 "/", buf=0x7fffd8000990, filler=0x7ffff789ece0, offset=0, fi=0x7fffef1c7500) at src/operations.cpp:82
+82		while (!finished); 
+(gdb) s
+83		return 0;
+(gdb) s
+84	}
+(gdb) s
+Dropped 3 packets with high delay
+0x00007ffff78a4232 in fuse_fs_readdir () from /lib/x86_64-linux-gnu/libfuse.so.2
+(gdb) 

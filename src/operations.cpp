@@ -8,6 +8,7 @@
 
 #include "nbfs.h"
 
+extern "C" {
 int nbfs_getattr(const char* path, struct stat* stbuf) {
 	std::string filename = path;
 	std::string stripped_slash = strip_leading_slash(filename);
@@ -25,17 +26,17 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 	stbuf->st_atime = stbuf->st_mtime = stbuf->st_ctime = time(NULL);
 
 	if (filename == "/") {
-		log_msg("OP GETATTR(" + filename + "): Returning attributes");
+		log_msg("OP GETATTR(%s): Returning attributes", filename.c_str());
 		// access mode, 0777 means that masks the RWX for group, user and other, see chmod(2)
 		stbuf->st_mode = S_IFDIR | 0777;
 		stbuf->st_nlink = 2;
 	} else if (file_exists(stripped_slash, filesize)) {
-		log_msg("OP GETATTR(" + stripped_slash + "): Returning attributes");
+		log_msg("OP GETATTR(%s): Returning attributes", stripped_slash.c_str());
 		stbuf->st_mode = S_IFREG | 0777;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = filesize;
 	} else {
-		log_msg("OP GETATTR(" + stripped_slash + ") not found");
+		log_msg("OP GETATTR(%s) not found", stripped_slash.c_str());
 		res = -ENOENT;
 	}
 	
@@ -43,28 +44,30 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 }
 
 // read the directory content and fill the each file / directory entry to buf by filler
-static int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
+int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 							off_t offset, struct fuse_file_info* fi) {
 	// currently, nbfs only supports one directory, which is the root
 	if (strcmp(path, "/") != 0) {
-		std::cout << "nbfs_readdir(" << path << "): Only / allowed" << std::endl;
+		log_msg("OP READDIR %s: Only / allowed", path);
 		return -ENOENT;
 	}
 
 	log_msg("READDIR GOT PATH: %s", "/");
 	
-	filler(buf, ".", 0, NULL);
-	filler(buf, "..", 0, NULL);
+	filler(buf, ".", NULL, 0);
+	filler(buf, "..", NULL, 0);
 
 	bool finished = false;
-	node.get(
+	log_msg("READDIR begins to get the values under key %s", nbfs::user_name.c_str());
+	nbfs::node.get(
 		// currently, only support the root directory
 		nbfs::user_name,
-		[filler, buf](const std::vector<std::shared_ptr<dht::Value>>& values) {
+		[filler, &buf](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			// fill the buf with the file name
 			for (auto & val : values) {
 				auto data = (*val).data.data();
-				filler(buf, (char*)data, 0, NULL);
+				filler(buf, (char*)data, NULL, 0);
+				log_msg("READDIR %s GOT ENTRY %s", "/", (char*)data);
 			}	
 
 			// once the values are found, stop the searching
@@ -80,23 +83,22 @@ static int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 	return 0;
 }
 
-nt nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) {
+int nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) {
 	// initialization
 	log_msg("OP READ %s", path);
 	bool finished = false;
 	bool find = false;
 	std::string content = "";
 	std::string clean_path = nbfs::user_name + path;
-	char* content_c;
 
 	// get the content
-	node.run(
+	nbfs::node.get(
 		clean_path,
 		[&content](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			for (auto& val : values) {
 				auto data = (*val).data.data();
-				log_msg("Found value: " + data);
-				content += data;
+				log_msg("Found value: %s", data);
+				content += (char*)data;
 			}
 
 			// stop searching once the values are found
@@ -104,7 +106,7 @@ nt nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fuse
 		},
 		[&finished, &find](bool success) {
 			find = success;
-			log_msg("OP READ: Returning")
+			log_msg("OP READ: Returning");
 			finished = true;
 		}
 	);
@@ -117,10 +119,10 @@ nt nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fuse
 
 	log_msg("Get the content from the file %s of %d bytes", clean_path, size);
 	
-	memcpy(bug, content.c_str() + offset, size);
+	memcpy(buf, content.c_str() + offset, size);
 
 	log_msg("OP READ: Returning");
 
 	return size;
 }
-
+}
