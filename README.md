@@ -3,6 +3,14 @@ A P2P File System designed for OpenDHT
 
 In this project, we are going to implement Neat and Brilliant File System (NBFS) for the Peer-to-Peer file sharing system. We will implement the P2P system with OpenDHT. After that, we will provide file system support for the P2P system, so that user could easily look through the files stored in the remote peer by mounting the file system. 
 
+#Requirements
+- Cmake2.8.8 or higher for google test
+
+Google Test Command Line 
+```
+cmake .
+make 
+```
 # Running
 
 You can simply pull the container we have pushed to the Docker hub to access the prepared environment by following command (you can find the Dockerfile in this repository): 
