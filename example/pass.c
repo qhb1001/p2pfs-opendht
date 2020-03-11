@@ -506,7 +506,7 @@ static off_t nbfs_lseek(const char *path, off_t off, int whence, struct fuse_fil
 }
 
 static const struct fuse_operations nbfs_oper = {
-//	.init           = nbfs_init,    //  
+//	.init           = nbfs_init,    // initiate the program 
 	.getattr	= nbfs_getattr,   // OK
 //	.access		= nbfs_access,    
 	.readlink	= nbfs_readlink,  // 
