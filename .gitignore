@@ -1,3 +1,10 @@
 googletest/
 test/test_getattr
 data/main
+cmake_install.cmake
+lib/
+bin/
+CMakeFiles/
+CMakeCache.txt
+test
+
