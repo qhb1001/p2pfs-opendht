@@ -94,7 +94,7 @@ static struct fuse_operations operations = {
     .readdir	= do_readdir,
     .read	= do_read,
    
-    //.open	= hello_open,
+    .open	= hello_open,
    
 };
 
