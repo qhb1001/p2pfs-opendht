@@ -16,8 +16,9 @@ extern "C" {
 dht::DhtRunner node;
 
 void testInit() {
-	node.run(4222, dht::crypto::generateIdentity(), true);
-	node.bootstrap("bootstrap.jami.net", "4222");
+    std::cout << node.run(4222, dht::crypto::generateIdentity(), true);
+    
+    std::cout << node.bootstrap("bootstrap.jami.net", "4222");
 }
 
 bool testOFF_T() {
@@ -51,11 +52,6 @@ bool testOFF_T() {
 }
 
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-/*
 int main() {
 	std::string foo = "hello world";
 	std::vector<uint8_t> bar (foo.begin(), foo.end());
@@ -65,5 +61,4 @@ int main() {
 	std::cout << (testOFF_T()? "." : "x") << std::endl;
 	return 0;
 }
-*/
 
