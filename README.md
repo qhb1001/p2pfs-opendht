@@ -7,10 +7,19 @@ In this project, we are going to implement Neat and Brilliant File System (NBFS)
 - Cmake2.8.8 or higher for google test
 
 Google Test Command Line 
+
 ```
 cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
+
+# Testing 
+Add testing for google test in subfolder.
+
+```
+git submodule add https://github.com/google/googletest.git
+```
+
 # Running
 
 You can simply pull the container we have pushed to the Docker hub to access the prepared environment by following command (you can find the Dockerfile in this repository): 
