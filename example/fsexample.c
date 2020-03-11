@@ -100,16 +100,7 @@ static struct fuse_operations operations = {
 
 int main( int argc, char *argv[] )
 {
-        /*////////////////////insert hello.c/////////////////////////   
-        struct fuse_args args = FUSE_ARGS_INIT(argc, argv);  
-        options.filename = strdup("hello");
-	options.contents = strdup("Hello World!\n");
-        /////////////////////////////////////////////////////////////*/
-          
-
-
-
-
+      
 
   
 	return fuse_main( argc, argv, &operations, NULL );
