@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <opendht.h>
+#include <thread>
 
 #define FUSE_USE_VERSION  26
 #include <fuse.h>
@@ -25,6 +26,31 @@ namespace nbfs {
 
 
 extern "C" {
+/* File storage structure */
+class FileNode {
+private:
+	// if the file is a directory or not
+	bool isDirectory;
+	// the content of the file, if isDirectory=false 
+	char* content;
+	// the content of the directory, if isDirectory=true
+	std::vector<FileNode> subFiles;
+	// the absolute path of the file
+	std::vector<std::string> path;
+
+public:
+	// parser method
+	std::vector<std::string> parse(std::string filePath);
+	// constructor method
+	FileNode(std::string filePath);
+	// insert a file node
+	void insert(FileNode node);
+	// get the file node, return NULL if it does not exist
+	FileNode get(std::string filePath);
+	// get path
+	std::vector<std::string> getPath();
+};
+
 /* FUSE operations (operations.cpp) */
 int nbfs_getattr(const char *path, struct stat *stbuf);
 int nbfs_open(const char *path, struct fuse_file_info *fi);

@@ -4,7 +4,15 @@
 # Default target executed when no arguments are given to make.
 default_target: all
 
+<<<<<<< HEAD
 .PHONY : default_target
+=======
+main: src/nbfs.h src/operations.cpp src/helpers.cpp src/main.cpp
+	g++ src/operations.cpp src/helpers.cpp src/main.cpp -std=c++14 -g -lpthread -lopendht -lgnutls `pkg-config fuse --cflags --libs` -lstdc++ -o src/fuse-test
+
+test: src/test.cpp src/file_node.cpp
+	g++ src/test.cpp src/file_node.cpp -std=c++14 -g -lpthread -lopendht -lgnutls `pkg-config fuse --cflags --libs` -lstdc++ -o src/test
+>>>>>>> afd46d77570cda2b0822b9bf850e4d461315f045
 
 # Allow only one "make -f Makefile2" at a time, but pass parallelism.
 .NOTPARALLEL:
