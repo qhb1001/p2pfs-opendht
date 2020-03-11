@@ -2,12 +2,12 @@
 
 #include <stdarg.h>
 
-FILE *logfile;
+FILE* logfile;
 
 void open_log() {
   logfile = fopen("rs-fuse.log", "a+");
 
-  if(! logfile) {
+  if(!logfile) {
     perror("Failed to open log");
     abort();
   }
@@ -23,40 +23,6 @@ void log_msg(const char *format, ...) {
   fprintf(logfile, "\n");
   fflush(logfile);
 }
-
-bool file_exists(std::string fileName, off_t& filesize) {
-	filesize = 0;
-	// get the file name with prefix
-	std::string fileNameWithPrefix = nbfs::user_name + fileName;
-
-	// search for the file
-	bool finished = false;
-	bool find = false;
-	nbfs::node.get(
-		fileNameWithPrefix,
-		[&filesize](const std::vector<std::shared_ptr<dht::Value>>& values) {
-			// compute the size of the file
-			for (const auto& value : values) {
-				std::cout << "Found value: " << *value << std::endl;
-				auto data = (*value).data.data();
-				filesize += strlen((char*)data);
-			}
-			// once the target is found, stop searching
-			return false;
-		},
-		[&finished, &find](bool success) {
-			// the order matters
-			find = success;
-			finished = true;
-		}
-	);
-
-	// spin lock to wair for searching result
-	while (!finished);
-
-	return find;
-}
-
 
 std::string strip_leading_slash(std::string filename) {
 	bool starts_with_slash = false;

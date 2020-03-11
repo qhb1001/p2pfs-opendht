@@ -30,7 +30,8 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 		// access mode, 0777 means that masks the RWX for group, user and other, see chmod(2)
 		stbuf->st_mode = S_IFDIR | 0777;
 		stbuf->st_nlink = 2;
-	} else if (file_exists(stripped_slash, filesize)) {
+	// todo: fill the condition
+	} else if (true) {
 		log_msg("OP GETATTR(%s): Returning attributes", stripped_slash.c_str());
 		stbuf->st_mode = S_IFREG | 0777;
 		stbuf->st_nlink = 1;
@@ -55,7 +56,8 @@ int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 	std::vector<FileNode*> directory;
 	// currently only support root directory
 	if (strcmp(path, "/") == 0) {
-		directory = nbfs::root->getSubFiles();
+		log_msg("the root directory got %d entries", root->getSubFiles().size());
+		directory = root->getSubFiles();
 	} else {
 		
 	}
@@ -74,20 +76,21 @@ int nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fus
 	bool finished = false;
 	bool find = false;
 	std::string content = "";
-	std::string clean_path = nbfs::user_name + path;
+	std::string clean_path = user_name + strip_leading_slash(path);
 
 	// get the content
-	nbfs::node.get(
+	node.get(
 		clean_path,
 		[&content](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			for (auto& val : values) {
-				auto data = (*val).data.data();
+				char* data = (char*)((*val).data.data());
+				data[parseValue(data)] = '\0';
 				log_msg("Found value: %s", data);
 				content += (char*)data;
 			}
 
 			// stop searching once the values are found
-			return true;
+			return false;
 		},
 		[&finished, &find](bool success) {
 			find = success;

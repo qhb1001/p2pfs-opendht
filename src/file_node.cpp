@@ -17,14 +17,7 @@ std::vector<std::string> FileNode::parse(std::string filePath) {
 }
 
 FileNode::FileNode(std::string name, char* cont) {
-	int length = name.length();
-	if (length == 0) {
-		exit(1);
-	}
-
-	if (name[length - 1] == '/') isDirectory = true;
-	else isDirectory = false;
-
+	this->name = name;
 	content = cont;
 }
 
