@@ -10,6 +10,10 @@ TEST(P2PNodeTest, apply){
 }
 
 int main(int argc, char **argv) {
+    std::string foo = "hello world";
+    std::vector<uint8_t> bar (foo.begin(), foo.end());
+    testInit();
+    
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
