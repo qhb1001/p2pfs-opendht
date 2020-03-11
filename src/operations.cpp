@@ -43,54 +43,28 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 	return res;
 }
 
-void fill_directory(fuse_fill_dir_t filler, void* buf) {
-	bool finished = false;
-	log_msg("READDIR begins to get the values under key %s", nbfs::user_name.c_str());
-	nbfs::node.get(
-		// currently, only support the root directory
-		nbfs::user_name,
-		[filler, &buf](const std::vector<std::shared_ptr<dht::Value>>& values) {
-			// fill the buf with the file name
-			for (auto & val : values) {
-				auto data = (*val).data.data();
-				filler(buf, (char*)data, NULL, 0);
-				log_msg("READDIR %s GOT ENTRY %s", "/", (char*)data);
-			}	
-
-			// once the values are found, stop the searching
-			return true;
-		},
-		[&finished](bool success) {
-			log_msg("READDIR finished");
-			finished = true;
-		}
-	);
-
-	while (!finished); 
-}
 
 // read the directory content and fill the each file / directory entry to buf by filler
 int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 							off_t offset, struct fuse_file_info* fi) {
-	// currently, nbfs only supports one directory, which is the root
-	if (strcmp(path, "/") != 0) {
-		log_msg("OP READDIR %s: Only / allowed", path);
-		return -ENOENT;
-	}
-
-	log_msg("READDIR GOT PATH: %s", "/");
+	log_msg("READDIR GOT PATH: %s", path);
 	
 	filler(buf, ".", NULL, 0);
 	filler(buf, "..", NULL, 0);
 	
-	// just test
-	filler(buf, "name.txt", NULL, 0);
-	filler(buf, "email.txt", NULL, 0);
-	filler(buf, "phone.txt", NULL, 0);
-	
-	std::thread th(fill_directory, filler, buf);
-	std::cout << "The new thread's joinable status: " << th.joinable() << std::endl;
-	th.join();
+	std::vector<FileNode*> directory;
+	// currently only support root directory
+	if (strcmp(path, "/") == 0) {
+		directory = nbfs::root->getSubFiles();
+	} else {
+		
+	}
+
+	// fill the buf
+	for (auto node : directory) {
+		filler(buf, node->getName().c_str(), NULL, 0);
+	}
+
 	return 0;
 }
 

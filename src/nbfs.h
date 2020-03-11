@@ -16,13 +16,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-namespace nbfs {
-	// hard coded user name, used for the namespace for files
-	static std::string user_name = "hongbo/";
-
-	// connection entry
-	static dht::DhtRunner node;
-}
 
 
 extern "C" {
@@ -34,22 +27,33 @@ private:
 	// the content of the file, if isDirectory=false 
 	char* content;
 	// the content of the directory, if isDirectory=true
-	std::vector<FileNode> subFiles;
+	std::vector<FileNode*> subFiles;
 	// the absolute path of the file
-	std::vector<std::string> path;
+	std::string name;
 
 public:
 	// parser method
 	std::vector<std::string> parse(std::string filePath);
 	// constructor method
-	FileNode(std::string filePath);
+	FileNode(std::string filePath, char* cont = NULL);
 	// insert a file node
-	void insert(FileNode node);
+	void insert(FileNode* node);
 	// get the file node, return NULL if it does not exist
-	FileNode get(std::string filePath);
-	// get path
-	std::vector<std::string> getPath();
+	FileNode* get(std::string filePath);
+	// get subfiles
+	std::vector<FileNode*> getSubFiles();
+	// get name
+	std::string getName();
+	// set content
+	void setContent(char* content);
+	// get content
+	char* getContent();	
 };
+
+/* initialization process */
+void initializeOpenDHT();
+void initializeLog();
+void initializeFileNodes(FileNode* curNode, std::string absolutePath);
 
 /* FUSE operations (operations.cpp) */
 int nbfs_getattr(const char *path, struct stat *stbuf);
@@ -72,5 +76,15 @@ std::string strip_leading_slash(std::string filename);
 void open_log();
 void log_msg(const char *format, ...);
 
+}
+namespace nbfs {
+	// hard coded user name, used for the namespace for files
+	static std::string user_name = "hongbo/";
+
+	// connection entry
+	static dht::DhtRunner node;
+
+	// root file node
+	static FileNode* root;
 }
 #endif

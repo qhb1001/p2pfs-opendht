@@ -8,6 +8,6 @@ int main() {
 	std::cin >> input;
 	FileNode x = FileNode(input);
 
-	for (auto val : x.getPath()) std::cout << val << std::endl;
+	for (auto val : x.parse(input)) std::cout << val << std::endl;
 	}
 }
