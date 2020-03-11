@@ -93,9 +93,9 @@ static struct fuse_operations operations = {
     .getattr	= do_getattr,
     .readdir	= do_readdir,
     .read	= do_read,
-   /////////////insert hello.c/////////////
+   
     //.open	= hello_open,
-   //////////////////////////////////////
+   
 };
 
 int main( int argc, char *argv[] )
