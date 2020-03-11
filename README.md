@@ -8,7 +8,7 @@ In this project, we are going to implement Neat and Brilliant File System (NBFS)
 
 Google Test Command Line 
 ```
-cmake .
+cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
 # Running

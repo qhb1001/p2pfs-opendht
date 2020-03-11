@@ -6,5 +6,3 @@ lib/
 bin/
 CMakeFiles/
 CMakeCache.txt
-test
-
