@@ -76,7 +76,7 @@ memcpy( buffer, selectedText + offset, size );
 		
 	return strlen( selectedText ) - offset;
 }
-/*////////////////////insert hello.c/////////////////////////
+////////////////////insert hello.c/////////////////////////
 static int hello_open(const char *path, struct fuse_file_info *fi)
 {
 	if (strcmp(path+1, options.filename) != 0)
@@ -88,12 +88,11 @@ static int hello_open(const char *path, struct fuse_file_info *fi)
 	return 0;
 }
 
-////////////////////////////////////////////////////////////*/
+////////////////////////////////////////////////////////////
 static struct fuse_operations operations = {
     .getattr	= do_getattr,
     .readdir	= do_readdir,
     .read	= do_read,
-   
     .open	= hello_open,
    
 };
