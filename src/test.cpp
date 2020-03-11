@@ -3,11 +3,19 @@
 int main() {
 	std::string input;
 
-	while (true) {
-	
-	std::cin >> input;
-	FileNode x = FileNode(input);
+	FileNode* root = new FileNode("");
+	FileNode* node1 = new FileNode("foo");
+	FileNode* node2 = new FileNode("bar");
 
-	for (auto val : x.parse(input)) std::cout << val << std::endl;
+	root->insert(node1); root->insert(node2);
+
+	std::vector<FileNode*> files = root->getSubFiles();
+
+	for (auto node : files) {
+		std::cout << "file [" << node->getName() << "]\n";
 	}
+
+	
+	
+
 }

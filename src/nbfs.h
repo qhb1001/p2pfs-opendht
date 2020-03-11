@@ -4,8 +4,11 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <opendht.h>
 #include <thread>
+#include <utility>
+#include <map>
 
 #define FUSE_USE_VERSION  26
 #include <fuse.h>
@@ -53,7 +56,7 @@ public:
 /* initialization process */
 void initializeOpenDHT();
 void initializeLog();
-void initializeFileNodes(FileNode* curNode, std::string absolutePath);
+void initializeFileNodes(FileNode*, std::string);
 
 /* FUSE operations (operations.cpp) */
 int nbfs_getattr(const char *path, struct stat *stbuf);
@@ -71,20 +74,25 @@ int nbfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
  * @ fileName: name of the file
  * @ filesize: the size of the file in bytes. 
  */ 
-bool file_exists(std::string fileName, off_t& filesize);
 std::string strip_leading_slash(std::string filename);
 void open_log();
 void log_msg(const char *format, ...);
+int parseValue(char*);
 
 }
-namespace nbfs {
-	// hard coded user name, used for the namespace for files
-	static std::string user_name = "hongbo/";
 
-	// connection entry
-	static dht::DhtRunner node;
+// hard coded user name, used for the namespace for files
+static std::string user_name = "hongbo/";
 
-	// root file node
-	static FileNode* root;
-}
+// connection entry
+extern dht::DhtRunner node;
+
+// root file node
+extern FileNode* root;
+
+// map for file names
+extern std::map<std::string, bool> exists;
+
+// log file
+extern FILE *logfile;
 #endif
