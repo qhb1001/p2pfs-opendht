@@ -35,13 +35,13 @@ void verifyValue(string key) {
 
 void prepareDirectory() {
 	dht::InfoHash key = dht::InfoHash::get(user_name);
-	string email = "email";
+	string email = "email.txt[9]";
 	vector<uint8_t> email_value(email.begin(), email.end());
 
-	string name = "name";
+	string name = "name.txt[8]";
 	vector<uint8_t> name_value(name.begin(), name.end());
 
-	string desc = "desc";
+	string desc = "desc.txt[8]";
 	vector<uint8_t> desc_value(desc.begin(), desc.end());
 
 	node.put(key, email_value);
@@ -59,23 +59,23 @@ int main() {
 	prepareDirectory();
 
 	// data preparation
-	std::string name_string = "hongbo qin\n";
+	std::string name_string = "hongbo qin\n[11]";
 	std::vector<uint8_t> name(name_string.begin(), name_string.end());
 
-	std::string email_string = "hongbo.qin.1001@gmail.com\n";
+	std::string email_string = "hongbo.qin.1001@gmail.com\n[26]";
 	std::vector<uint8_t> email(email_string.begin(), email_string.end());
 
-	std::string desc_string = "hello world!\nI am hungry!\n";
+	std::string desc_string = "hello world!\nI am hungry!\n[30]";
 	std::vector<uint8_t> desc(desc_string.begin(), desc_string.end());
 	
 	// fill the key-value pair into the system
-	node.put("hongbo/name", name);
-	node.put("hongbo/email", email);
-	node.put("hongbo/desc", desc);
+	node.put("hongbo/name.txt", name);
+	node.put("hongbo/email.txt", email);
+	node.put("hongbo/desc.txt", desc);
 
-	verifyValue("hongbo/name");
-	verifyValue("hongbo/email");
-	verifyValue("hongbo/desc");
+	verifyValue("hongbo/name.txt");
+	verifyValue("hongbo/email.txt");
+	verifyValue("hongbo/desc.txt");
 
 	return 0;
 }
