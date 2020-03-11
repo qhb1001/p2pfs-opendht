@@ -17,5 +17,4 @@ dht::DhtRunner node;
 void testInit() {
     node.run(4222, dht::crypto::generateIdentity(), true);
     node.bootstrap("bootstrap.jami.net", "4222");
-    std:cout<<"init connection success"<<std::endl;
 }
