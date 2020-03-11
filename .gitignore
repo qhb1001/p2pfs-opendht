@@ -1,5 +1,6 @@
 .DS_Store
 test/.DS_Store
+test/googletest
 googletest/
 test/test_getattr
 data/main
