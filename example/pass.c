@@ -533,6 +533,6 @@ static const struct fuse_operations nbfs_oper = {
    
 int main(int argc, char *argv[])
 {
-	umask(0);  //给用户最大权限  已录入问题解决 
+	umask(0);  //给用户最大权限  
 	return fuse_main(argc, argv, &nbfs_oper, NULL);
 }
