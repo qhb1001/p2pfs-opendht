@@ -3,8 +3,13 @@ A P2P File System designed for OpenDHT
 
 In this project, we are going to implement Neat and Brilliant File System (NBFS) for the Peer-to-Peer file sharing system. We will implement the P2P system with OpenDHT. After that, we will provide file system support for the P2P system, so that user could easily look through the files stored in the remote peer by mounting the file system. 
 
-#Requirements
+#Requirements & Testing 
 - Cmake2.8.8 or higher for google test
+For ubuntu/Linux not installed cmake will need to running this command
+
+```
+wget https://github.com/Kitware/CMake/releases/download/v3.17.0-rc2/cmake-3.17.0-rc2-Linux-x86_64.sh
+```
 
 Google Test Command Line 
 
@@ -12,8 +17,16 @@ Google Test Command Line
 cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
+if you have this error please edit googletest/CMakeList.txt line 13 edit 
+```
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.1")
+```
 
-# Testing 
+```
+if (CMAKE_VERSION VERSION_GREATER "3.0.2")
+
+```
+
 Add testing for google test in subfolder.
 
 ```
