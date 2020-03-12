@@ -65,7 +65,7 @@ static int nbfs_getattr(const char *path, struct stat *stbuf,  //OK
 	(void) fi;
 	int res;
 
-	res = lstat(path, stbuf);      // lstat()获取文件属性 传给 stbuf   已录入问题解决 
+	res = lstat(path, stbuf);      // lstat()获取文件属性 传给 stbuf    
 	if (res == -1)
 		return -errno;
 
