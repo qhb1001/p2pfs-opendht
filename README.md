@@ -13,6 +13,11 @@ cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
 
+For any docker cannot strated in macbook we should run this toolbox command. 
+```
+bash --login '/Applications/Docker/Docker Quickstart Terminal.app/Contents/Resources/Scripts/start.sh'
+```
+
 # Testing 
 Add testing for google test in subfolder.
 
