@@ -1,4 +1,3 @@
-default_target: all
 .PHONY: all test clean data
 
 main: src/nbfs.h src/operations.cpp src/helpers.cpp src/main.cpp src/file_node.cpp
@@ -14,10 +13,6 @@ data: data/main.cpp
 test_getattr: test/test_getattr.cpp
 	g++ test/test_getattr.cpp -std=c++14 -lopendht -lgnutls `pkg-config fuse --cflags --libs` -lstdc++ -o test/test_getattr
 
-main: src/nbfs.h src/operations.cpp src/helpers.cpp src/main.cpp
-	g++ src/operations.cpp src/helpers.cpp src/main.cpp -std=c++14 -lopendht -lgnutls `pkg-config fuse --cflags --libs` -lstdc++ -o src/fuse-test
-
 clean:
 	rm data/main
 
-#docker run -it -e AWSACCESSKEYID=obscured -e AWSSECRETACCESSKEY=obscured --privileged hongbo1001/fuse bash

@@ -38,7 +38,7 @@ public:
 	// parser method
 	std::vector<std::string> parse(std::string filePath);
 	// constructor method
-	FileNode(std::string filePath, char* cont = NULL);
+	FileNode(std::string filePath);
 	// insert a file node
 	void insert(FileNode* node);
 	// get the file node, return NULL if it does not exist
