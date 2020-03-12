@@ -1,14 +1,3 @@
-/*
-  FUSE: Filesystem in Userspace
-  Copyright (C) 2001-2007  Miklos Szeredi <miklos@szeredi.hu>
-  Copyright (C) 2011       Sebastian Pipping <sebastian@pipping.org>
-  This program can be distributed under the terms of the GNU GPL.
-  See the file COPYING.
-*/
-
-
-
- *
  * Compile with
  *
  *     gcc -Wall passthrough.c `pkg-config fuse3 --cflags --libs` -o passthrough
