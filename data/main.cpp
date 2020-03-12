@@ -65,7 +65,7 @@ int main() {
 	std::string email_string = "hongbo.qin.1001@gmail.com\n[26]";
 	std::vector<uint8_t> email(email_string.begin(), email_string.end());
 
-	std::string desc_string = "hello world!\nI am hungry!\n[30]";
+	std::string desc_string = "keep hungry\nkeep foolish\n[25]";
 	std::vector<uint8_t> desc(desc_string.begin(), desc_string.end());
 	
 	// fill the key-value pair into the system

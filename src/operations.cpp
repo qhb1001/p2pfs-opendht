@@ -11,12 +11,10 @@
 extern "C" {
 int nbfs_getattr(const char* path, struct stat* stbuf) {
 	std::string filename = path;
-	std::string stripped_slash = strip_leading_slash(filename);
+	std::string clean_path = strip_leading_slash(filename);
 
 	// return value
 	int res = 0;
-	// file size
-	off_t filesize;
 
 	
 	// initialize stat
@@ -26,24 +24,23 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 	stbuf->st_atime = stbuf->st_mtime = stbuf->st_ctime = time(NULL);
 
 	if (filename == "/") {
-		log_msg("OP GETATTR(%s): Returning attributes", filename.c_str());
+		log_msg("OP GETATTR(%s): Returning attributes", clean_path.c_str());
 		// access mode, 0777 means that masks the RWX for group, user and other, see chmod(2)
 		stbuf->st_mode = S_IFDIR | 0777;
 		stbuf->st_nlink = 2;
-	// todo: fill the condition
-	} else if (true) {
-		log_msg("OP GETATTR(%s): Returning attributes", stripped_slash.c_str());
+	} else if (exists[clean_path]) {
 		stbuf->st_mode = S_IFREG | 0777;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = filesize;
+		FileNode* node = root->get(clean_path);
+		log_msg("OP GETATTR(%s): Returning attributes, content[%d] of size[%d]", clean_path.c_str(), node->getContent(), strlen(node->getContent()));
+		stbuf->st_size = strlen(node->getContent());
 	} else {
-		log_msg("OP GETATTR(%s) not found", stripped_slash.c_str());
+		log_msg("OP GETATTR(%s) not found", clean_path.c_str());
 		res = -ENOENT;
 	}
 	
 	return res;
 }
-
 
 // read the directory content and fill the each file / directory entry to buf by filler
 int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
@@ -75,42 +72,29 @@ int nbfs_read(const char *path, char *buf, size_t size, off_t offset, struct fus
 	log_msg("OP READ %s", path);
 	bool finished = false;
 	bool find = false;
-	std::string content = "";
-	std::string clean_path = user_name + strip_leading_slash(path);
-
-	// get the content
-	node.get(
-		clean_path,
-		[&content](const std::vector<std::shared_ptr<dht::Value>>& values) {
-			for (auto& val : values) {
-				char* data = (char*)((*val).data.data());
-				data[parseValue(data)] = '\0';
-				log_msg("Found value: %s", data);
-				content += (char*)data;
-			}
-
-			// stop searching once the values are found
-			return false;
-		},
-		[&finished, &find](bool success) {
-			find = success;
-			log_msg("OP READ: Returning");
-			finished = true;
-		}
-	);
+	std::string clean_path = strip_leading_slash(path);
 	
-	while (!finished);
-	if (!find) return -ENOENT;
+	FileNode* node = root->get(strip_leading_slash(path));
+	if (node == NULL) {
+		log_msg("file [%s] doesn't exist", path);
+		return -ENOENT;
+	}
 
-	off_t length = content.length();
-	if (offset + size > length) size = length - offset;
-
-	log_msg("Get the content from the file %s of %d bytes", clean_path, size);
+	std::string content = node->getContent();
+	int length = content.length();
+	log_msg("Get the content from the file %s of %d bytes", clean_path.c_str(), length);
 	
-	memcpy(buf, content.c_str() + offset, size);
+	memcpy(buf, content.c_str(), length);
 
 	log_msg("OP READ: Returning");
 
 	return size;
 }
+}
+int nbfs_open(const char *path, struct fuse_file_info *fi) {
+	std::string clean_path = strip_leading_slash(path);
+	FileNode* node = root->get(clean_path);
+
+	int result = node? 0 : -ENOENT;
+	return result;
 }

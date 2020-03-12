@@ -2,10 +2,9 @@
 
 #include <stdarg.h>
 
-FILE* logfile;
 
 void open_log() {
-  logfile = fopen("rs-fuse.log", "a+");
+  logfile = fopen("log", "w");
 
   if(!logfile) {
     perror("Failed to open log");

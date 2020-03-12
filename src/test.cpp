@@ -16,6 +16,11 @@ int main() {
 	}
 
 	
-	
+	while (true) {
+		std::string input;
+		std::cin >> input;
+		
+		for (auto str : root->parse(input)) std::cout << str << std::endl;
+	}
 
 }

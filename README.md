@@ -13,7 +13,7 @@ wget https://github.com/Kitware/CMake/releases/download/v3.17.0-rc2/cmake-3.17.0
 
 Google Test Command Line 
 
-```
+```sh
 cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
@@ -27,6 +27,13 @@ if (CMAKE_VERSION VERSION_GREATER "3.0.2")
 
 ```
 
+For any docker cannot strated in macbook we should run this toolbox command. 
+
+```sh
+bash --login '/Applications/Docker/Docker Quickstart Terminal.app/Contents/Resources/Scripts/start.sh'
+```
+
+# Testing 
 Add testing for google test in subfolder.
 
 ```
@@ -39,6 +46,12 @@ You can simply pull the container we have pushed to the Docker hub to access the
 
 ```cmd
 docker pull hongbo1001/fuse
+```
+
+before the fuse system was installed in your docker. We should implement the system of opendht
+
+```sh
+docker run -d -p4222:4222/udp aberaud/opendht dhtnode -b bootstrap.jami.net -p 4222 -s
 ```
 
 In order to grant the fuse enough privilege to mount the file system, the following command would be necessary: 

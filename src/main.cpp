@@ -6,6 +6,8 @@ FileNode* root;
 
 std::map<std::string, bool> exists;
 
+FILE* logfile;
+
 extern "C" {
 static struct fuse_operations nbfs_ops;
 
@@ -36,11 +38,15 @@ void fillNodes(FileNode* fileNode, std::string key) {
 		[&fileNode, key](const std::vector<std::shared_ptr<dht::Value>>& values) {
 			for (auto & val : values) {
 				char* content = (char*)((*val).data.data());
-				content[parseValue(content)] = '\0';
-				fileNode->setContent(content);
-				log_msg("      got the content [%s]", content);
+				int length = parseValue(content);
+				content[length] = '\0';
+				char* newArray = new char[length + 1];
+				strcpy(newArray, content);
+				newArray[length] = '\0';
+				fileNode->setContent(newArray);
+				log_msg("      got the content [%s]", fileNode->getContent());
 			}
-			return false;
+			return true;
 		},
 		[&finished](bool success) {
 			finished = true;
@@ -100,12 +106,11 @@ void bfs(FileNode* root, std::string absolutePath) {
 
 		// start to request the content
 		bool finished = false;
-		std::pair<FileNode*, std::string> regularFile;
-		regularFile.first = NULL;
+		std::queue<std::pair<FileNode*, std::string>> regularFiles;
 
 		node.get(
 			user_name + curPath,
-			[&curNode, curPath, &regularFile, &q](const std::vector<std::shared_ptr<dht::Value>>& values) {
+			[&curNode, curPath, &regularFiles, &q](const std::vector<std::shared_ptr<dht::Value>>& values) {
 				for (auto & val : values) {
 					char* name = (char*)((*val).data.data());
 					int length = parseValue(name);
@@ -114,9 +119,6 @@ void bfs(FileNode* root, std::string absolutePath) {
 					else exists[curPath + name] = true;
 
 					FileNode* newNode = new FileNode(name);
-					for (int i = 0; i < length; i++) {
-						log_msg("The %d-th char [%c]", i, name[i]);
-					}
 
 					// if this is a directory
 					if (name[length - 1] == '/') {
@@ -125,14 +127,14 @@ void bfs(FileNode* root, std::string absolutePath) {
 						q.push(std::make_pair(newNode, curPath + name));
 					} else {
 						log_msg("%s: a regular file [%s] is found", curPath.c_str(), name);
-						regularFile = std::make_pair(newNode, curPath + name);
+						regularFiles.push(std::make_pair(newNode, curPath + name));
 						curNode->insert(newNode);
 						// terminate
 					}
 				}	
 
 				// once the values are found, stop the searching
-				return false;
+				return true;
 			},
 			[&finished](bool success) {
 				finished = true;
@@ -142,7 +144,9 @@ void bfs(FileNode* root, std::string absolutePath) {
 		while (!finished); 	
 
 		// if this is a regular file, try to fill it
-		if (regularFile.first != NULL) {
+		while (!regularFiles.empty()) {
+			std::pair<FileNode*, std::string> regularFile = regularFiles.front();
+			regularFiles.pop();
 			fillNodes(regularFile.first, regularFile.second);
 		}
 	}

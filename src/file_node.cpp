@@ -16,9 +16,8 @@ std::vector<std::string> FileNode::parse(std::string filePath) {
 	return result;
 }
 
-FileNode::FileNode(std::string name, char* cont) {
+FileNode::FileNode(std::string name) {
 	this->name = name;
-	content = cont;
 }
 
 std::vector<FileNode*> FileNode::getSubFiles() {
