@@ -8,13 +8,14 @@ In this project, we are going to implement Neat and Brilliant File System (NBFS)
 
 Google Test Command Line 
 
-```
+```sh
 cmake . -DCMAKE_CXX_FLAGS:STRING=-std=c++11
 make 
 ```
 
 For any docker cannot strated in macbook we should run this toolbox command. 
-```
+
+```sh
 bash --login '/Applications/Docker/Docker Quickstart Terminal.app/Contents/Resources/Scripts/start.sh'
 ```
 
@@ -31,6 +32,12 @@ You can simply pull the container we have pushed to the Docker hub to access the
 
 ```cmd
 docker pull hongbo1001/fuse
+```
+
+before the fuse system was installed in your docker. We should implement the system of opendht
+
+```sh
+docker run -d -p4222:4222/udp aberaud/opendht dhtnode -b bootstrap.jami.net -p 4222 -s
 ```
 
 In order to grant the fuse enough privilege to mount the file system, the following command would be necessary: 
