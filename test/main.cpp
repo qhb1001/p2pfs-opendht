@@ -51,7 +51,6 @@ bool testOFF_T() {
 	return sum == filesize;
 }
 
-
 int main() {
 	std::string foo = "hello world";
 	std::vector<uint8_t> bar (foo.begin(), foo.end());
