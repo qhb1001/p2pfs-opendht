@@ -29,7 +29,7 @@ While after we mount the system, the process will be running in the first termin
 docker exec -it  -e AWSACCESSKEYID=obscured -e AWSSECRETACCESSKEY=obscured --privileged [container-id] bash
 ```
 
-#Requirements for Testing 
+# Requirements for Testing 
 
 - Cmake2.8.8 or higher for google test
     For ubuntu/Linux not installed cmake will need to running this command
@@ -70,6 +70,10 @@ Add testing for google test in subfolder.
 git submodule add https://github.com/google/googletest.git
 ```
 
+for second time use 
+```
+git submodule update --init
+```
 
 
 # TODO
