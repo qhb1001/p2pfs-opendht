@@ -74,10 +74,20 @@ int nbfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
  * @ fileName: name of the file
  * @ filesize: the size of the file in bytes. 
  */ 
+
+// delete the leading slash character
 std::string strip_leading_slash(std::string filename);
 void open_log();
 void log_msg(const char *format, ...);
-int parseValue(char*);
+
+// split the path by delimiter '/'
+int parseValue(char* val);
+// fill the file node with the content fetched from key
+void fillNodes(FileNode* fileNode, std::string key);
+// deprecated method to build the static file storage data structures
+void dfs(FileNode* curNode, std::string absolutePath);
+// build the file storage structure by bfs
+void bfs(FileNode* root, std::string absolutePath);
 
 }
 

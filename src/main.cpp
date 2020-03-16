@@ -12,24 +12,6 @@ extern "C" {
 static struct fuse_operations nbfs_ops;
 
 
-int parseValue(char* val) {
-	int length = strlen(val);
-	int i = 0, result = 0;
-	for (; i < length; i++) {
-		if (val[i] == '[') {
-			i += 1;
-			break;
-		}
-	}
-
-	for (; i < length; i++) {
-		if (val[i] == ']') break;
-		result = result * 10 + val[i] - '0';
-	}
-
-	return result;
-}
-
 void fillNodes(FileNode* fileNode, std::string key) {
 	log_msg("  -> filling the content of regular file [%s]", key.c_str());
 	bool finished = false;
