@@ -43,8 +43,7 @@ int nbfs_getattr(const char* path, struct stat* stbuf) {
 }
 
 // read the directory content and fill the each file / directory entry to buf by filler
-int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
-							off_t offset, struct fuse_file_info* fi) {
+int nbfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info* fi) {
 	log_msg("READDIR GOT PATH: %s", path);
 	
 	filler(buf, ".", NULL, 0);
